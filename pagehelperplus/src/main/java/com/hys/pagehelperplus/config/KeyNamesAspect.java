@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
  **/
 @Aspect
 @Component
-public class KeyNameAspect {
+public class KeyNamesAspect {
 
     @Pointcut("@annotation(com.hys.pagehelperplus.annotation.KeyNamesStrategy)")
     public void pointCut() {
