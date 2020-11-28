@@ -1,7 +1,7 @@
 package com.hys.pagehelperplus.constant;
 
 /**
- * 表主键策略枚举
+ * 表主键名称策略枚举
  *
  * @author Robert Hou
  * @since 2020年11月27日 19:15

@@ -17,7 +17,7 @@ import java.util.List;
 public class PageHelperUtils<T> {
 
     /**
-     * 默认的表主键名为”id“
+     * 默认的表主键名为“id”
      */
     private static final ThreadLocal<List<String>> KEY_NAMES = ThreadLocal.withInitial(ArrayList::new);
 
