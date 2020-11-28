@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hys.pagehelperplus.dao.UserDAO">
+
+    <sql id="allColumns">
+        id,
+		name,
+		sex,
+		address
+	</sql>
+
+    <select id="list" resultType="com.hys.pagehelperplus.entity.UserDO">
+        SELECT
+        <include refid="allColumns"/>
+        FROM user
+    </select>
+
+</mapper>
