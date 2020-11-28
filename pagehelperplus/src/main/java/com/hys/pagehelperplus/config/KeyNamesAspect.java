@@ -32,7 +32,7 @@ public class KeyNamesAspect {
         KeyNamesStrategy annotation = method.getAnnotation(KeyNamesStrategy.class);
         String[] keyNames = annotation.keyNames();
         if (keyNames.length == 0) {
-            //@KeyNamesStrategy注解为默认配置，就将表主键名设置为”id“
+            //@KeyNamesStrategy注解为默认配置，就将表主键名设置为“id”
             PageHelperUtils.setKeyNames(new String[]{"id"});
         } else {
             //自定义的表主键名
