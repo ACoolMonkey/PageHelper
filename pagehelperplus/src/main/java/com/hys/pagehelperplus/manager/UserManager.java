@@ -19,7 +19,7 @@ public class UserManager {
     @Autowired
     private UserDAO userDAO;
 
-    //    @KeyNamesStrategy(strategy = KeyNamesStrategyEnum.MUST_TELL, keyNames = {"id", "name"})
+    //    @KeyNamesStrategy(keyNames = {"id", "name"})
     public Page<UserDO> list(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         return userDAO.list();

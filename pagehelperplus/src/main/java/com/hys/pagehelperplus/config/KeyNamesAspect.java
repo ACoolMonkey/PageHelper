@@ -1,7 +1,6 @@
 package com.hys.pagehelperplus.config;
 
 import com.hys.pagehelperplus.annotation.KeyNamesStrategy;
-import com.hys.pagehelperplus.constant.KeyNamesStrategyEnum;
 import com.hys.pagehelperplus.util.PageHelperUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -31,20 +30,14 @@ public class KeyNamesAspect {
         MethodSignature ms = (MethodSignature) joinPoint.getSignature();
         Method method = ms.getMethod();
         KeyNamesStrategy annotation = method.getAnnotation(KeyNamesStrategy.class);
-        KeyNamesStrategyEnum strategy = annotation.strategy();
         String[] keyNames = annotation.keyNames();
-        if (strategy == KeyNamesStrategyEnum.DEFAULT) {
+        if (keyNames.length == 0) {
             //@KeyNamesStrategy注解为默认配置，就将表主键名设置为”id“
             PageHelperUtils.setKeyNames(new String[]{"id"});
-            return joinPoint.proceed();
-        } else if (strategy == KeyNamesStrategyEnum.MUST_TELL && keyNames.length == 0) {
-            //如果配置为自定义的表主键名，但是没有传进来其名称，则抛异常
-            throw new IllegalArgumentException("@KeyNamesStrategy注解参数配置有误！keyNames配置项不能为空！");
-        } else if (strategy == KeyNamesStrategyEnum.MUST_TELL) {
+        } else {
             //自定义的表主键名
             PageHelperUtils.setKeyNames(keyNames);
-            return joinPoint.proceed();
         }
-        throw new UnsupportedOperationException("没有分析到这种情况，需要进行排查！");
+        return joinPoint.proceed();
     }
 }
