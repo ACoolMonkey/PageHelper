@@ -27,6 +27,12 @@ public class MyMySqlDialect extends MySqlDialect {
             log.debug("原始SQL：\n" + sql);
         }
 
+        if (sql.contains("JOIN")) {
+            //TODO 多表分页逻辑暂时没实现，先用默认的SQL后面追加limit子句的方式，等以后有时间再研究（对于不是JOIN方式来进行表连接的SQL，执行可能会报错）
+            PageHelperUtils.remove();
+            return super.getPageSql(sql, page, pageKey);
+        }
+
         List<String> keyNames = PageHelperUtils.getKeyNames();
         if (keyNames.size() == 0) {
             //没有添加@KeyNamesStrategy注解，也将表主键名设置为”id“
