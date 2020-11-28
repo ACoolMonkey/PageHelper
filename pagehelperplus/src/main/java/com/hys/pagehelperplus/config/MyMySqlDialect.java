@@ -28,7 +28,7 @@ public class MyMySqlDialect extends MySqlDialect {
         }
 
         if (sql.contains("JOIN")) {
-            //TODO 多表分页逻辑暂时没实现，先用默认的SQL后面追加limit子句的方式，等以后有时间再研究（对于不是JOIN方式来进行表连接的SQL，执行可能会报错）
+            //TODO 多表分页逻辑暂时没实现，先用默认的SQL后面追加limit子句的方式，等以后有时间再研究（对于不是JOIN方式来进行表连接的SQL（比如笛卡尔积），执行可能会报错）
             PageHelperUtils.remove();
             return super.getPageSql(sql, page, pageKey);
         }
