@@ -53,7 +53,7 @@ public class MyMySqlDialect extends MySqlDialect {
             fields = m.group(1);
             for (String keyName : keyNames) {
                 if (fields.contains(keyName)) {
-                    fields = fields.replace(keyName, "alias1." + keyName);
+                    fields = fields.replace(keyName, "pageHelperAlias1." + keyName);
                 }
             }
 
@@ -72,8 +72,8 @@ public class MyMySqlDialect extends MySqlDialect {
             throw new ParseException("解析失败！需要排查SQL！");
         }
 
-        String returnSql = "SELECT " + fields + " " + fromTable + " alias1 \n" +
-                " INNER JOIN ( SELECT " + getKeyNames(keyNames) + " " + afterClause + " ) alias2"
+        String returnSql = "SELECT " + fields + " " + fromTable + " pageHelperAlias1 \n" +
+                " INNER JOIN ( SELECT " + getKeyNames(keyNames) + " " + afterClause + " ) pageHelperAlias2"
                 + joinKeyNames(keyNames);
         if (log.isDebugEnabled()) {
             log.debug("拼接后的分页SQL：\n" + returnSql);
@@ -108,7 +108,7 @@ public class MyMySqlDialect extends MySqlDialect {
         StringBuilder stringBuilder = new StringBuilder(" ON ");
         for (int i = 0; i < keyNames.size(); i++) {
             keyNames.set(i, keyNames.get(i).trim());
-            stringBuilder.append("alias1.").append(keyNames.get(i)).append(" = alias2.").append(keyNames.get(i));
+            stringBuilder.append("pageHelperAlias1.").append(keyNames.get(i)).append(" = pageHelperAlias2.").append(keyNames.get(i));
             if (i != keyNames.size() - 1) {
                 stringBuilder.append(" AND ");
             }
