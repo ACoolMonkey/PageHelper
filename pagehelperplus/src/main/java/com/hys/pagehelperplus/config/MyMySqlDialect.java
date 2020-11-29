@@ -2,6 +2,7 @@ package com.hys.pagehelperplus.config;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.dialect.helper.MySqlDialect;
+import com.hys.pagehelperplus.exception.ParseException;
 import com.hys.pagehelperplus.util.PageHelperUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cache.CacheKey;
@@ -43,8 +44,11 @@ public class MyMySqlDialect extends MySqlDialect {
         String fromTable = null;
         String fields = null;
         String afterClause = null;
+        boolean isSucceeded = false;
         Matcher m = PATTERN.matcher(sql);
         if (m.find()) {
+            isSucceeded = true;
+
             //SELECT后面FROM前面的查找字段
             fields = m.group(1);
             for (String keyName : keyNames) {
@@ -63,6 +67,9 @@ public class MyMySqlDialect extends MySqlDialect {
 
             //FROM+表名
             fromTable = m.group(3);
+        }
+        if (!isSucceeded) {
+            throw new ParseException("解析失败！需要排查SQL！");
         }
 
         String returnSql = "SELECT " + fields + " " + fromTable + " alias1 \n" +
