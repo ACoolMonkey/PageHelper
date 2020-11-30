@@ -25,7 +25,7 @@ public class MyMySqlDialect extends MySqlDialect {
     @Override
     public String getPageSql(String sql, Page page, CacheKey pageKey) {
         if (log.isDebugEnabled()) {
-            log.debug("原始SQL：\n" + sql);
+            log.debug("\n原始SQL：\n" + sql);
         }
 
         if (sql.contains("JOIN")) {
@@ -76,7 +76,7 @@ public class MyMySqlDialect extends MySqlDialect {
                 " INNER JOIN ( SELECT " + getKeyNames(keyNames) + " " + afterClause + " ) pageHelperAlias2"
                 + joinKeyNames(keyNames);
         if (log.isDebugEnabled()) {
-            log.debug("拼接后的分页SQL：\n" + returnSql);
+            log.debug("\n拼接后的分页SQL：\n" + returnSql);
         }
 
         PageHelperUtils.remove();
