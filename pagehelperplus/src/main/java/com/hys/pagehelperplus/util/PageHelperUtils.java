@@ -55,7 +55,12 @@ public class PageHelperUtils<T> {
     }
 
     public static Boolean getIsRelegated() {
-        return IS_RELEGATED.get();
+        Boolean isRelegated = IS_RELEGATED.get();
+        if (isRelegated == null) {
+            setIsRelegated(false);
+            return false;
+        }
+        return isRelegated;
     }
 
     public static void setIsRelegated(boolean isRelegated) {
