@@ -31,6 +31,14 @@ public class KeyNamesAspect {
         Method method = ms.getMethod();
         KeyNamesStrategy annotation = method.getAnnotation(KeyNamesStrategy.class);
         String[] keyNames = annotation.keyNames();
+        boolean relegated = annotation.isRelegated();
+        if (relegated) {
+            //如果降级，则直接走调用方法
+            PageHelperUtils.setIsRelegated(true);
+            return joinPoint.proceed();
+        }
+        PageHelperUtils.setIsRelegated(false);
+
         if (keyNames.length == 0) {
             //@KeyNamesStrategy注解为默认配置，就将表主键名设置为“id”
             PageHelperUtils.setKeyNames(new String[]{"id"});

@@ -20,6 +20,10 @@ public class PageHelperUtils<T> {
      * 默认的表主键名为“id”
      */
     private static final ThreadLocal<List<String>> KEY_NAMES = ThreadLocal.withInitial(ArrayList::new);
+    /**
+     * 是否降级
+     */
+    private static final ThreadLocal<Boolean> IS_RELEGATED = new ThreadLocal<>();
 
     private PageHelperUtils() {
     }
@@ -50,10 +54,19 @@ public class PageHelperUtils<T> {
         KEY_NAMES.set(list);
     }
 
+    public static Boolean getIsRelegated() {
+        return IS_RELEGATED.get();
+    }
+
+    public static void setIsRelegated(boolean isRelegated) {
+        IS_RELEGATED.set(isRelegated);
+    }
+
     /**
      * 清空ThreadLocal值，防止内存泄漏
      */
     public static void remove() {
         KEY_NAMES.remove();
+        IS_RELEGATED.remove();
     }
 }
