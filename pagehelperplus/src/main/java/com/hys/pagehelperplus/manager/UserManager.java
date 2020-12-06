@@ -3,7 +3,9 @@ package com.hys.pagehelperplus.manager;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.hys.pagehelperplus.dao.UserDAO;
+import com.hys.pagehelperplus.entity.Pager;
 import com.hys.pagehelperplus.entity.UserDO;
+import com.hys.pagehelperplus.util.PageHelperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +22,9 @@ public class UserManager {
     private UserDAO userDAO;
 
     //    @KeyNamesStrategy(keyNames = {"id", "name"})
-    public Page<UserDO> list(int pageNum, int pageSize) {
+    public Pager<UserDO> list(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        return userDAO.list();
+        Page<UserDO> list = userDAO.list();
+        return PageHelperUtils.pageTransform(list);
     }
 }
