@@ -7,7 +7,9 @@ import com.hys.pagehelperplus.util.PageHelperUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cache.CacheKey;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +24,7 @@ public class MyMySqlDialect extends MySqlDialect {
 
     private static final Pattern PATTERN = Pattern.compile("SELECT\\s*([\\s|\\S]*?)\\s*?((FROM\\s*[0-9a-zA-Z_]*)\\s*[\\s|\\S]*)", Pattern.CASE_INSENSITIVE);
     private static final Pattern ORDER_BY_PATTERN = Pattern.compile("SELECT\\s*([\\s|\\S]*?)\\s*?(((FROM\\s*[0-9a-zA-Z_]*)\\s*[\\s|\\S]*?)(ORDER\\s*BY\\s*[\\s|\\S]+))", Pattern.CASE_INSENSITIVE);
+    private static final Pattern KEY_ALIAS_PATTERN = Pattern.compile("\\s*pageHelperAlias1.(\\S+)(\\s+(AS)?\\s*(\\S+))?", Pattern.CASE_INSENSITIVE);
 
     @Override
     public String getPageSql(String sql, Page page, CacheKey pageKey) {
@@ -58,14 +61,40 @@ public class MyMySqlDialect extends MySqlDialect {
             m = PATTERN.matcher(sql);
         }
 
+        Map<String, String> aliasMap = null;
         if (m.find()) {
             isSucceeded = true;
 
             //SELECT后面FROM前面的查找字段
             fields = m.group(1);
-            for (String keyName : keyNames) {
-                if (fields.contains(keyName)) {
-                    fields = fields.replace(keyName, "pageHelperAlias1." + keyName);
+
+            if (fields != null) {
+                int matchCount = 0;
+                for (String keyName : keyNames) {
+                    String regex = "[\\s|\\S]*" + keyName + "[\\s|,][\\s|\\S]*";
+                    Pattern containsPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+                    Matcher matcher = containsPattern.matcher(fields);
+                    if (matcher.find()) {
+                        //只替换第一个是为了解决表主键起别名的情况
+                        fields = fields.replaceFirst(keyName, "pageHelperAlias1." + keyName);
+                        matchCount++;
+                    }
+                }
+
+                String[] fieldsArray = fields.split(",");
+                int initialCapacity = (int) (matchCount / 0.75 + 1);
+                aliasMap = new HashMap<>(initialCapacity);
+                for (String field : fieldsArray) {
+                    field = field.trim();
+                    Matcher matcher = KEY_ALIAS_PATTERN.matcher(field);
+                    if (matcher.find()) {
+                        String keyAlias = matcher.group(4);
+                        if (keyAlias != null) {
+                            String key1 = matcher.group(1);
+                            aliasMap.put(key1, keyAlias);
+                        }
+                    }
+
                 }
             }
 
@@ -92,6 +121,13 @@ public class MyMySqlDialect extends MySqlDialect {
                 " INNER JOIN ( SELECT " + getKeyNames(keyNames) + " " + afterClause + " ) pageHelperAlias2"
                 + joinKeyNames(keyNames);
         if (orderByClause != null) {
+            if (aliasMap != null) {
+                for (Map.Entry<String, String> entry : aliasMap.entrySet()) {
+                    if (orderByClause.contains(entry.getKey()) && !orderByClause.contains(entry.getValue())) {
+                        orderByClause = orderByClause.replace(entry.getKey(), entry.getValue());
+                    }
+                }
+            }
             returnSql += " " + orderByClause;
         }
         if (log.isDebugEnabled()) {
