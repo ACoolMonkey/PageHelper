@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.hys</groupId>
-    <artifactId>pagehelperplus</artifactId>
-    <version>1.2-SNAPSHOT</version>
-    <name>pagehelperplus</name>
+    <artifactId>pagehelperplus-spring-boot-starter</artifactId>
+    <version>1.2.1-SNAPSHOT</version>
+    <name>pagehelperplus-spring-boot-starter</name>
 
     <properties>
         <java.version>1.8</java.version>

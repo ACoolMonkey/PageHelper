@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 public class MyMySqlDialect extends MySqlDialect {
 
     private static final Pattern PATTERN = Pattern.compile("SELECT\\s*([\\s|\\S]*?)\\s*?((FROM\\s*[0-9a-zA-Z_]*)\\s*[\\s|\\S]*)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern ORDER_BY_PATTERN = Pattern.compile("SELECT\\s*([\\s|\\S]*?)\\s*?(((FROM\\s*[0-9a-zA-Z_]*)\\s*[\\s|\\S]*?)(ORDER\\s*BY\\s*[\\s|\\S]+))", Pattern.CASE_INSENSITIVE);
 
     @Override
     public String getPageSql(String sql, Page page, CacheKey pageKey) {
@@ -28,8 +29,9 @@ public class MyMySqlDialect extends MySqlDialect {
             log.debug("\n原始SQL：\n" + sql);
         }
 
-        if (sql.contains("JOIN") || PageHelperUtils.getIsRelegated()) {
-            //TODO 多表分页逻辑暂时没实现，先用默认的SQL后面追加limit子句的方式，等以后有时间再研究（对于不是JOIN方式来进行表连接的SQL（比如笛卡尔积），执行可能会报错）
+        String upperCaseSql = sql.toUpperCase();
+        if (upperCaseSql.contains("JOIN") || PageHelperUtils.getIsRelegated()) {
+            //TODO 多表分页逻辑暂时没实现，先用默认的SQL后面追加limit子句的方式（对于不是JOIN方式来进行表连接的SQL（比如笛卡尔积），执行可能会报错）
             PageHelperUtils.remove();
             return super.getPageSql(sql, page, pageKey);
         }
@@ -44,8 +46,18 @@ public class MyMySqlDialect extends MySqlDialect {
         String fromTable = null;
         String fields = null;
         String afterClause = null;
+        String orderByClause = null;
         boolean isSucceeded = false;
-        Matcher m = PATTERN.matcher(sql);
+
+        Matcher m;
+        boolean isOrderByContains = false;
+        if (upperCaseSql.contains("ORDER")) {
+            isOrderByContains = true;
+            m = ORDER_BY_PATTERN.matcher(sql);
+        } else {
+            m = PATTERN.matcher(sql);
+        }
+
         if (m.find()) {
             isSucceeded = true;
 
@@ -58,7 +70,7 @@ public class MyMySqlDialect extends MySqlDialect {
             }
 
             //FROM+后面的子句
-            afterClause = m.group(2);
+            afterClause = isOrderByContains ? m.group(3) : m.group(2);
             if (page.getStartRow() == 0) {
                 afterClause = afterClause + "\n LIMIT ? ";
             } else {
@@ -66,7 +78,11 @@ public class MyMySqlDialect extends MySqlDialect {
             }
 
             //FROM+表名
-            fromTable = m.group(3);
+            fromTable = isOrderByContains ? m.group(4) : m.group(3);
+
+            if (isOrderByContains) {
+                orderByClause = m.group(5);
+            }
         }
         if (!isSucceeded) {
             throw new ParseException("解析失败！需要排查SQL！");
@@ -75,6 +91,9 @@ public class MyMySqlDialect extends MySqlDialect {
         String returnSql = "SELECT " + fields + " " + fromTable + " pageHelperAlias1 \n" +
                 " INNER JOIN ( SELECT " + getKeyNames(keyNames) + " " + afterClause + " ) pageHelperAlias2"
                 + joinKeyNames(keyNames);
+        if (orderByClause != null) {
+            returnSql += " " + orderByClause;
+        }
         if (log.isDebugEnabled()) {
             log.debug("\n拼接后的分页SQL：\n" + returnSql);
         }
