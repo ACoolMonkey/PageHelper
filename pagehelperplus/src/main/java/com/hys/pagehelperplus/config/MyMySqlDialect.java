@@ -25,6 +25,8 @@ public class MyMySqlDialect extends MySqlDialect {
     private static final Pattern PATTERN = Pattern.compile("SELECT\\s*([\\s|\\S]*?)\\s*?((FROM\\s*[0-9a-zA-Z_]*)\\s*[\\s|\\S]*)", Pattern.CASE_INSENSITIVE);
     private static final Pattern ORDER_BY_PATTERN = Pattern.compile("SELECT\\s*([\\s|\\S]*?)\\s*?(((FROM\\s*[0-9a-zA-Z_]*)\\s*[\\s|\\S]*?)(ORDER\\s*BY\\s*[\\s|\\S]+))", Pattern.CASE_INSENSITIVE);
     private static final Pattern KEY_ALIAS_PATTERN = Pattern.compile("\\s*pageHelperAlias1.(\\S+)(\\s+(AS)?\\s*(\\S+))?", Pattern.CASE_INSENSITIVE);
+    private static final Pattern CONTAINS_ORDER_PATTERN = Pattern.compile("[\\s|\\S]*ORDER\\s*BY[\\s|\\S]*", Pattern.CASE_INSENSITIVE);
+    private static final Pattern CONTAINS_JOIN_PATTERN = Pattern.compile("[\\s|\\S]*JOIN[\\s|\\S]*", Pattern.CASE_INSENSITIVE);
 
     @Override
     public String getPageSql(String sql, Page page, CacheKey pageKey) {
@@ -32,8 +34,8 @@ public class MyMySqlDialect extends MySqlDialect {
             log.debug("\n原始SQL：\n" + sql);
         }
 
-        String upperCaseSql = sql.toUpperCase();
-        if (upperCaseSql.contains("JOIN") || PageHelperUtils.getIsRelegated()) {
+        Matcher containsJoinMatcher = CONTAINS_JOIN_PATTERN.matcher(sql);
+        if (containsJoinMatcher.find() || PageHelperUtils.getIsRelegated()) {
             //TODO 多表分页逻辑暂时没实现，先用默认的SQL后面追加limit子句的方式（对于不是JOIN方式来进行表连接的SQL（比如笛卡尔积），执行可能会报错）
             PageHelperUtils.remove();
             return super.getPageSql(sql, page, pageKey);
@@ -54,7 +56,9 @@ public class MyMySqlDialect extends MySqlDialect {
 
         Matcher m;
         boolean isOrderByContains = false;
-        if (upperCaseSql.contains("ORDER")) {
+
+        Matcher containsOrderMatcher = CONTAINS_ORDER_PATTERN.matcher(sql);
+        if (containsOrderMatcher.find()) {
             isOrderByContains = true;
             m = ORDER_BY_PATTERN.matcher(sql);
         } else {
