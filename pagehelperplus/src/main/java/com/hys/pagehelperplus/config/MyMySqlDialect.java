@@ -36,7 +36,7 @@ public class MyMySqlDialect extends MySqlDialect {
 
         Matcher containsJoinMatcher = CONTAINS_JOIN_PATTERN.matcher(sql);
         if (containsJoinMatcher.find() || PageHelperUtils.getIsRelegated()) {
-            //TODO 多表分页逻辑暂时没实现，先用默认的SQL后面追加limit子句的方式（对于不是JOIN方式来进行表连接的SQL（比如笛卡尔积），执行可能会报错）
+            //多表分页逻辑没实现，用默认的SQL后面追加limit子句的方式（对于不是JOIN方式来进行表连接的SQL（比如笛卡尔积），执行可能会报错。这个时候需要将降级选项手动置为true）
             PageHelperUtils.remove();
             return super.getPageSql(sql, page, pageKey);
         }
