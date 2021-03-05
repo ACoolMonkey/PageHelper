@@ -37,8 +37,8 @@ public class MyMySqlDialect extends MySqlDialect {
             return super.getPageSql(sql, page, pageKey);
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("\n原始SQL：\n" + sql);
+        if (log.isInfoEnabled()) {
+            log.info("\n原始SQL：\n" + sql);
         }
 
         List<String> keyNames = PageHelperUtils.getKeyNames();
@@ -75,7 +75,7 @@ public class MyMySqlDialect extends MySqlDialect {
             if (fields != null) {
                 int matchCount = 0;
                 for (String keyName : keyNames) {
-                    String regex = "[\\s|\\S]*" + keyName + "[\\s|,][\\s|\\S]*";
+                    String regex = "[\\s|\\S]*" + keyName + "[\\s|,]?[\\s|\\S]*";
                     Pattern containsPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
                     Matcher matcher = containsPattern.matcher(fields);
                     if (matcher.find()) {
@@ -98,7 +98,6 @@ public class MyMySqlDialect extends MySqlDialect {
                             aliasMap.put(key1, keyAlias);
                         }
                     }
-
                 }
             }
 
@@ -134,8 +133,8 @@ public class MyMySqlDialect extends MySqlDialect {
             }
             returnSql += " " + orderByClause;
         }
-        if (log.isDebugEnabled()) {
-            log.debug("\n拼接后的分页SQL：\n" + returnSql);
+        if (log.isInfoEnabled()) {
+            log.info("\n拼接后的分页SQL：\n" + returnSql);
         }
 
         PageHelperUtils.remove();
