@@ -32,10 +32,7 @@ public class MyMySqlDialect extends MySqlDialect {
             return super.getPageSql(sql, page, pageKey);
         }
 
-        if (log.isInfoEnabled()) {
-            log.info("\n原始SQL：\n" + sql);
-        }
-
+        log.info("\n原始SQL：\n{}", sql);
         List<String> keyNames = PageHelperUtils.getKeyNames();
         if (keyNames.size() == 0) {
             //没有添加@KeyNamesStrategy注解，也将表主键名设置为”id“
@@ -86,9 +83,7 @@ public class MyMySqlDialect extends MySqlDialect {
         String returnSql = "SELECT " + fields + " " + fromTable + " pageHelperAlias1 \n" +
                 " INNER JOIN ( SELECT " + getKeyNames(keyNames) + " " + afterClause + " ) pageHelperAlias2"
                 + joinKeyNames(keyNames);
-        if (log.isInfoEnabled()) {
-            log.info("\n拼接后的分页SQL：\n" + returnSql);
-        }
+        log.info("\n拼接后的分页SQL：\n{}", returnSql);
 
         PageHelperUtils.remove();
         return returnSql;
