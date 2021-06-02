@@ -22,6 +22,7 @@ public class MyMySqlDialect extends MySqlDialect {
 
     private static final Pattern PATTERN = Pattern.compile("SELECT\\s*([\\s|\\S]*?)\\s*?((FROM\\s*[0-9a-zA-Z_]*)\\s*[\\s|\\S]*)", Pattern.CASE_INSENSITIVE);
     private static final Pattern CONTAINS_JOIN_PATTERN = Pattern.compile("[\\s|\\S]*JOIN[\\s|\\S]*", Pattern.CASE_INSENSITIVE);
+    private static final Pattern CONTAINS_DISTINCT_PATTERN = Pattern.compile("\\s+DISTINCT\\s+", Pattern.CASE_INSENSITIVE);
 
     @Override
     public String getPageSql(String sql, Page page, CacheKey pageKey) {
@@ -47,6 +48,7 @@ public class MyMySqlDialect extends MySqlDialect {
 
         Matcher m = PATTERN.matcher(sql);
 
+        boolean isDistinctContains = false;
         if (m.find()) {
             isSucceeded = true;
 
@@ -54,6 +56,12 @@ public class MyMySqlDialect extends MySqlDialect {
             fields = m.group(1);
 
             if (fields != null) {
+                //查看SQL中是否含有DISTINCT
+                Matcher containsDistinctMatcher = CONTAINS_DISTINCT_PATTERN.matcher(sql);
+                if (containsDistinctMatcher.find()) {
+                    isDistinctContains = true;
+                }
+
                 for (String keyName : keyNames) {
                     String regex = "[\\s|\\S]*" + keyName + "[\\s|,]?[\\s|\\S]*";
                     Pattern containsPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
@@ -81,7 +89,7 @@ public class MyMySqlDialect extends MySqlDialect {
         }
 
         String returnSql = "SELECT " + fields + " " + fromTable + " pageHelperAlias1 \n" +
-                " INNER JOIN ( SELECT " + getKeyNames(keyNames) + " " + afterClause + " ) pageHelperAlias2"
+                " INNER JOIN ( SELECT " + (isDistinctContains ? "DISTINCT " : "") + getKeyNames(keyNames) + " " + afterClause + " ) pageHelperAlias2"
                 + joinKeyNames(keyNames);
         log.info("\n拼接后的分页SQL：\n{}", returnSql);
 
