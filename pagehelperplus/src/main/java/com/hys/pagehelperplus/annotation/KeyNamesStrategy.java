@@ -22,5 +22,5 @@ public @interface KeyNamesStrategy {
      * 是否降级选项：true：降级；false：不降级（默认值）
      * 暂时提供的一个选项，当重写的分页逻辑出错而无法修改时，将该选项值置为true，将会走默认的PageHelper逻辑，而不是重写的自定义分页逻辑
      */
-    boolean isRelegated() default false;
+    boolean relegate() default false;
 }

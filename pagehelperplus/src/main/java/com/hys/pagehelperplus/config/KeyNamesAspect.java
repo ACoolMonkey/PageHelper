@@ -31,8 +31,8 @@ public class KeyNamesAspect {
         Method method = ms.getMethod();
         KeyNamesStrategy annotation = method.getAnnotation(KeyNamesStrategy.class);
         String[] keyNames = annotation.keyNames();
-        boolean relegated = annotation.isRelegated();
-        if (relegated) {
+        boolean relegate = annotation.relegate();
+        if (relegate) {
             //如果降级，则直接走调用方法
             PageHelperUtils.setIsRelegated(true);
             return joinPoint.proceed();
