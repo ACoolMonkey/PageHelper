@@ -67,8 +67,9 @@ public class MyMySqlDialect extends MySqlDialect {
                     Pattern containsPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
                     Matcher matcher = containsPattern.matcher(fields);
                     if (matcher.find()) {
+                        String keyNameAndBackQuoteIfContains = matcher.group(1);
                         //只替换第一个是为了解决表主键起别名的情况
-                        fields = fields.replaceFirst(matcher.group(1), "pageHelperAlias1." + matcher.group(1));
+                        fields = fields.replaceFirst(keyNameAndBackQuoteIfContains, "pageHelperAlias1." + keyNameAndBackQuoteIfContains);
                     }
                 }
             }
