@@ -1,4 +1,4 @@
-package com.hys.pagehelperplus.entity;
+package com.hys.pagehelperplus.demo.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -6,16 +6,16 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * 用户展示对象
+ * 用户表对象
  *
  * @author Robert Hou
- * @since 2020年11月27日 22:23
+ * @since 2020年11月27日 22:25
  **/
 @Data
 @NoArgsConstructor
-public class UserVO implements Serializable {
+public class UserDO implements Serializable {
 
-    private static final long serialVersionUID = -8871248796230316578L;
+    private static final long serialVersionUID = 7368535729213662088L;
     /**
      * 主键
      */

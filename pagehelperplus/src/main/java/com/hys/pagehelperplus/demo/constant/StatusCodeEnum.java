@@ -1,4 +1,4 @@
-package com.hys.pagehelperplus.constant;
+package com.hys.pagehelperplus.demo.constant;
 
 /**
  * 状态码

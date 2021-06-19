@@ -1,10 +1,10 @@
-package com.hys.pagehelperplus.manager;
+package com.hys.pagehelperplus.demo.manager;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.hys.pagehelperplus.dao.UserDAO;
+import com.hys.pagehelperplus.demo.dao.UserDAO;
+import com.hys.pagehelperplus.demo.entity.UserDO;
 import com.hys.pagehelperplus.entity.Pager;
-import com.hys.pagehelperplus.entity.UserDO;
 import com.hys.pagehelperplus.util.PageHelperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

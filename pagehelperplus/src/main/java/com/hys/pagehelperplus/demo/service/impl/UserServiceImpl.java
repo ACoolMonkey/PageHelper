@@ -1,11 +1,11 @@
-package com.hys.pagehelperplus.service.impl;
+package com.hys.pagehelperplus.demo.service.impl;
 
+import com.hys.pagehelperplus.demo.entity.UserDO;
+import com.hys.pagehelperplus.demo.entity.UserVO;
+import com.hys.pagehelperplus.demo.manager.UserManager;
+import com.hys.pagehelperplus.demo.util.mapstruct.UserListMapper;
+import com.hys.pagehelperplus.demo.service.UserService;
 import com.hys.pagehelperplus.entity.Pager;
-import com.hys.pagehelperplus.entity.UserDO;
-import com.hys.pagehelperplus.entity.UserVO;
-import com.hys.pagehelperplus.manager.UserManager;
-import com.hys.pagehelperplus.service.UserService;
-import com.hys.pagehelperplus.util.mapstruct.UserListMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

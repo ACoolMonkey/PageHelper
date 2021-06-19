@@ -1,7 +1,7 @@
-package com.hys.pagehelperplus.dao;
+package com.hys.pagehelperplus.demo.dao;
 
 import com.github.pagehelper.Page;
-import com.hys.pagehelperplus.entity.UserDO;
+import com.hys.pagehelperplus.demo.entity.UserDO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

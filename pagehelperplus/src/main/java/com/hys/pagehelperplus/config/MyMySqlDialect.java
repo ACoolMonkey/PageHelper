@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class MyMySqlDialect extends MySqlDialect {
 
-    private static final Pattern PATTERN = Pattern.compile("SELECT\\s*([\\s|\\S]*?)\\s*?((FROM\\s*[0-9a-zA-Z_]*)\\s*[\\s|\\S]*)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PATTERN = Pattern.compile("SELECT\\s*([\\s|\\S]*?)\\s*?((FROM\\s*[0-9a-zA-Z_`]*)\\s*[\\s|\\S]*)", Pattern.CASE_INSENSITIVE);
     private static final Pattern CONTAINS_JOIN_PATTERN = Pattern.compile("[\\s|\\S]*JOIN[\\s|\\S]*", Pattern.CASE_INSENSITIVE);
     private static final Pattern CONTAINS_DISTINCT_PATTERN = Pattern.compile("\\s+DISTINCT\\s+", Pattern.CASE_INSENSITIVE);
 

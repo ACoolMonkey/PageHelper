@@ -1,8 +1,8 @@
-package com.hys.pagehelperplus.util.mapstruct;
+package com.hys.pagehelperplus.demo.util.mapstruct;
 
+import com.hys.pagehelperplus.demo.entity.UserDO;
+import com.hys.pagehelperplus.demo.entity.UserVO;
 import com.hys.pagehelperplus.entity.Pager;
-import com.hys.pagehelperplus.entity.UserDO;
-import com.hys.pagehelperplus.entity.UserVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueMappingStrategy;
 import org.mapstruct.factory.Mappers;

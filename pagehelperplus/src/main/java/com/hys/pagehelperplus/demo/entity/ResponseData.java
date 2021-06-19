@@ -1,6 +1,6 @@
-package com.hys.pagehelperplus.entity;
+package com.hys.pagehelperplus.demo.entity;
 
-import com.hys.pagehelperplus.constant.StatusCodeEnum;
+import com.hys.pagehelperplus.demo.constant.StatusCodeEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
