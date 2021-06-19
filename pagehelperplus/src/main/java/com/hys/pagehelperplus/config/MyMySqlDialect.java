@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.cache.CacheKey;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -76,11 +77,20 @@ public class MyMySqlDialect extends MySqlDialect {
                 for (String keyName : keyNames) {
                     String regex = "[\\s|\\S&&[^`]]*((`)?" + keyName + "(`)?)[\\s|,]?[\\s|\\S]*";
                     Pattern containsPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-                    Matcher matcher = containsPattern.matcher(fields);
-                    if (matcher.find()) {
-                        String keyNameAndBackQuoteIfContains = matcher.group(1);
-                        //只替换第一个是为了解决表主键起别名的情况
-                        fields = fields.replaceFirst(keyNameAndBackQuoteIfContains, "pageHelperAlias1." + keyNameAndBackQuoteIfContains);
+                    String[] fieldArray = fields.split(",");
+                    List<String> fieldList = new ArrayList<>(fieldArray.length);
+                    for (String field : fieldArray) {
+                        Matcher matcher = containsPattern.matcher(field);
+                        if (matcher.find()) {
+                            String keyNameAndBackQuoteIfContains = matcher.group(1).toUpperCase();
+                            //只替换第一个是为了解决表主键起别名的情况
+                            fieldList.add(field.toUpperCase().replaceFirst(keyNameAndBackQuoteIfContains, "pageHelperAlias1." + keyNameAndBackQuoteIfContains));
+                        } else {
+                            fieldList.add(field);
+                        }
+                    }
+                    if (!fieldList.isEmpty()) {
+                        fields = String.join(",", fieldList);
                     }
                 }
             }
@@ -179,7 +189,6 @@ public class MyMySqlDialect extends MySqlDialect {
         if (StringUtils.isBlank(field)) {
             return StringUtils.EMPTY;
         }
-
 
         Matcher matcher = CONTAINS_ALIAS_PATTERN.matcher(field);
         if (matcher.find()) {
