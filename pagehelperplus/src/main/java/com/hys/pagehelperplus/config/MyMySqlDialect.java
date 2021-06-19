@@ -63,12 +63,12 @@ public class MyMySqlDialect extends MySqlDialect {
                 }
 
                 for (String keyName : keyNames) {
-                    String regex = "[\\s|\\S]*" + keyName + "[\\s|,]?[\\s|\\S]*";
+                    String regex = "[\\s|\\S&&[^`]]*((`)?" + keyName + "(`)?)[\\s|,]?[\\s|\\S]*";
                     Pattern containsPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
                     Matcher matcher = containsPattern.matcher(fields);
                     if (matcher.find()) {
                         //只替换第一个是为了解决表主键起别名的情况
-                        fields = fields.replaceFirst(keyName, "pageHelperAlias1." + keyName);
+                        fields = fields.replaceFirst(matcher.group(1), "pageHelperAlias1." + matcher.group(1));
                     }
                 }
             }
