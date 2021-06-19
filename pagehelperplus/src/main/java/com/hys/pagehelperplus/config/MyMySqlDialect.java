@@ -119,7 +119,7 @@ public class MyMySqlDialect extends MySqlDialect {
         return returnSql;
     }
 
-    private String invokeSuperMethod(String sql, Page page, CacheKey pageKey) {
+    private String invokeSuperMethod(String sql, Page<?> page, CacheKey pageKey) {
         PageHelperUtils.remove();
         return super.getPageSql(sql, page, pageKey);
     }
