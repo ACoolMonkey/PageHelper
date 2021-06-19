@@ -27,6 +27,7 @@ public class MyMySqlDialect extends MySqlDialect {
     private static final Pattern PATTERN = Pattern.compile("SELECT\\s*([\\s|\\S]*?)\\s*?((FROM\\s*[0-9a-zA-Z_`]*)\\s*[\\s|\\S]*)", Pattern.CASE_INSENSITIVE);
     private static final Pattern CONTAINS_JOIN_PATTERN = Pattern.compile("[\\s|\\S]*JOIN[\\s|\\S]*", Pattern.CASE_INSENSITIVE);
     private static final Pattern CONTAINS_DISTINCT_PATTERN = Pattern.compile("\\s+DISTINCT\\s+", Pattern.CASE_INSENSITIVE);
+    private static final Pattern CONTAINS_ALIAS_PATTERN = Pattern.compile("\\s*(\\S+)(\\s+AS\\s+\\S+)?\\s*", Pattern.CASE_INSENSITIVE);
 
     @Override
     public String getPageSql(String sql, Page page, CacheKey pageKey) {
@@ -179,9 +180,14 @@ public class MyMySqlDialect extends MySqlDialect {
             return StringUtils.EMPTY;
         }
 
-        field = field.trim();
-        if (field.startsWith("`") && field.endsWith("`")) {
-            return field.substring(1, field.length() - 1);
+
+        Matcher matcher = CONTAINS_ALIAS_PATTERN.matcher(field);
+        if (matcher.find()) {
+            String keyNameAndBackQuoteIfContains = matcher.group(1);
+            if (keyNameAndBackQuoteIfContains.startsWith("`") && keyNameAndBackQuoteIfContains.endsWith("`")) {
+                return keyNameAndBackQuoteIfContains.substring(1, keyNameAndBackQuoteIfContains.length() - 1);
+            }
+            return keyNameAndBackQuoteIfContains;
         }
         return field;
     }
