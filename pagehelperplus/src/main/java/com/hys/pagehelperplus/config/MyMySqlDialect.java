@@ -74,12 +74,15 @@ public class MyMySqlDialect extends MySqlDialect {
                     isDistinctContains = true;
                 }
 
+                StringBuilder stringBuilder = new StringBuilder();
                 for (String keyName : keyNames) {
-                    String regex = "[\\s|\\S&&[^`]]*((`)?" + keyName + "(`)?)[\\s|,]?[\\s|\\S]*";
+                    String regex = "[\\s]*[^\\S]+((`)?" + keyName + "(`)?)[^\\S]+[\\s]*";
                     Pattern containsPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
                     String[] fieldArray = fields.split(",");
                     List<String> fieldList = new ArrayList<>(fieldArray.length);
                     for (String field : fieldArray) {
+                        stringBuilder.delete(0, stringBuilder.length());
+                        field = stringBuilder.append(" ").append(field).append(" ").toString();
                         Matcher matcher = containsPattern.matcher(field);
                         if (matcher.find()) {
                             String keyNameAndBackQuoteIfContains = matcher.group(1).toUpperCase();
