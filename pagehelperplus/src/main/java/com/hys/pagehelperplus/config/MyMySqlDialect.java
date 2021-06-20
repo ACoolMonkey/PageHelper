@@ -185,7 +185,7 @@ public class MyMySqlDialect extends MySqlDialect {
         return length == uniqueKeyNames.size();
     }
 
-    private String removeBackQuoteIfContains(String field) {
+    private String removeAliasAndBackQuoteIfContains(String field) {
         if (StringUtils.isBlank(field)) {
             return StringUtils.EMPTY;
         }
@@ -206,7 +206,7 @@ public class MyMySqlDialect extends MySqlDialect {
             return Collections.emptyList();
         }
 
-        return list.stream().map(this::removeBackQuoteIfContains).distinct().collect(Collectors.toList());
+        return list.stream().map(this::removeAliasAndBackQuoteIfContains).distinct().collect(Collectors.toList());
     }
 
     private List<String> unique(String[] array) {
