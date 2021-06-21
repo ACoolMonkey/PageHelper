@@ -46,6 +46,23 @@ public class PageHelperUtils<T> {
                 page.getResult());
     }
 
+    /**
+     * PageHelper中的Page类转换成自定义的Pager类
+     *
+     * @see Page
+     * @see Pager
+     */
+    public static <T> Pager<T> pageTransform(Page<?> page, List<T> list) {
+        return PageHelperMapper.INSTANCE.pageTransform(
+                page.getStartRow(),
+                page.getEndRow(),
+                page.getPageNum(),
+                page.getPageSize(),
+                page.getPages(),
+                page.getTotal(),
+                list);
+    }
+
     public static List<String> getKeyNames() {
         return KEY_NAMES.get();
     }
