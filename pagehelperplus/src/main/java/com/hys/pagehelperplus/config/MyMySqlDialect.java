@@ -5,6 +5,8 @@ import com.github.pagehelper.dialect.helper.MySqlDialect;
 import com.hys.pagehelperplus.exception.ParseException;
 import com.hys.pagehelperplus.util.PageHelperUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.cache.CacheKey;
 
@@ -131,7 +133,7 @@ public class MyMySqlDialect extends MySqlDialect {
      * KeyNames转换成String格式（逗号拼接）
      */
     private String getKeyNames(List<String> keyNames) {
-        if (keyNames == null || keyNames.isEmpty()) {
+        if (CollectionUtils.isEmpty(keyNames)) {
             return null;
         }
         StringBuilder stringBuilder = new StringBuilder();
@@ -146,7 +148,7 @@ public class MyMySqlDialect extends MySqlDialect {
      * KeyNames转换成SQL JOIN的关联格式
      */
     private String joinKeyNames(List<String> keyNames) {
-        if (keyNames == null || keyNames.isEmpty()) {
+        if (CollectionUtils.isEmpty(keyNames)) {
             return null;
         }
         StringBuilder stringBuilder = new StringBuilder(" ON ");
@@ -169,7 +171,7 @@ public class MyMySqlDialect extends MySqlDialect {
         }
 
         List<String> keyNames = PageHelperUtils.getKeyNames();
-        if (keyNames == null || keyNames.isEmpty()) {
+        if (CollectionUtils.isEmpty(keyNames)) {
             return false;
         }
         //考虑keyNames有可能有重复主键名的情况 e.g.@KeyNamesStrategy(keyNames = {"order_id", "order_id"})
@@ -205,7 +207,7 @@ public class MyMySqlDialect extends MySqlDialect {
     }
 
     private List<String> unique(List<String> list) {
-        if (list == null || list.isEmpty()) {
+        if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();
         }
 
@@ -213,7 +215,7 @@ public class MyMySqlDialect extends MySqlDialect {
     }
 
     private List<String> unique(String[] array) {
-        if (array == null || array.length == 0) {
+        if (ArrayUtils.isEmpty(array)) {
             return Collections.emptyList();
         }
 
