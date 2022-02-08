@@ -43,7 +43,7 @@ public class MyMySqlDialect extends MySqlDialect {
 
         log.info("\n原始SQL：\n{}", sql);
         List<String> keyNames = PageHelperUtils.getKeyNames();
-        if (keyNames.size() == 0) {
+        if (CollectionUtils.isEmpty(keyNames)) {
             //没有添加@KeyNamesStrategy注解，也将表主键名设置为”id“
             PageHelperUtils.setKeyNames(new String[]{"id"});
             keyNames = PageHelperUtils.getKeyNames();
@@ -136,6 +136,7 @@ public class MyMySqlDialect extends MySqlDialect {
         if (CollectionUtils.isEmpty(keyNames)) {
             return null;
         }
+
         StringBuilder stringBuilder = new StringBuilder();
         for (String keyName : keyNames) {
             stringBuilder.append(keyName.trim()).append(", ");
@@ -151,6 +152,7 @@ public class MyMySqlDialect extends MySqlDialect {
         if (CollectionUtils.isEmpty(keyNames)) {
             return null;
         }
+
         StringBuilder stringBuilder = new StringBuilder(" ON ");
         for (int i = 0; i < keyNames.size(); i++) {
             keyNames.set(i, keyNames.get(i).trim());
@@ -183,9 +185,7 @@ public class MyMySqlDialect extends MySqlDialect {
             if (!uniqueKeyNames.contains(field)) {
                 return false;
             }
-            if (uniqueKeyNames.contains(field)) {
-                length++;
-            }
+            length++;
         }
         return length == uniqueKeyNames.size();
     }
