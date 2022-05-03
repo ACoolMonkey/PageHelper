@@ -105,7 +105,7 @@ public class PageHelperUtils<T> {
         if (pageNum < 1 || pageSize < 1) {
             throw new IllegalArgumentException("页码或每页显示数量不能小于1！");
         }
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return new Pager<>();
         }
 
