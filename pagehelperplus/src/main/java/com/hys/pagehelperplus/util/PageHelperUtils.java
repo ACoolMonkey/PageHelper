@@ -15,7 +15,7 @@ import java.util.List;
  * @author Robert Hou
  * @since 2020年11月27日 16:19
  **/
-public class PageHelperUtils {
+public class PageHelperUtils<T> {
 
     /**
      * 默认的表主键名为“id”
