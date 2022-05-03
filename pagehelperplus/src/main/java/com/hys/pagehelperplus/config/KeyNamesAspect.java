@@ -1,6 +1,6 @@
-package com.hys.pagehelperplus.aop;
+package com.hys.pagehelperplus.config;
 
-import com.hys.pagehelperplus.aop.annotation.KeyNamesStrategy;
+import com.hys.pagehelperplus.annotation.KeyNamesStrategy;
 import com.hys.pagehelperplus.util.PageHelperUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 @Component
 public class KeyNamesAspect {
 
-    @Pointcut("@annotation(com.hys.pagehelperplus.aop.annotation.KeyNamesStrategy)")
+    @Pointcut("@annotation(com.hys.pagehelperplus.annotation.KeyNamesStrategy)")
     public void pointCut() {
     }
 
