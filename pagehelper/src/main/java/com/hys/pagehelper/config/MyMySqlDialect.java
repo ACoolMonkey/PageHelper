@@ -7,6 +7,7 @@ import com.hys.pagehelper.util.PageHelperUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.cache.CacheKey;
 
@@ -37,7 +38,7 @@ public class MyMySqlDialect extends MySqlDialect {
     @Override
     public String getPageSql(String sql, Page page, CacheKey pageKey) {
         Matcher containsJoinMatcher = CONTAINS_JOIN_PATTERN.matcher(sql);
-        if (containsJoinMatcher.find() || PageHelperUtils.getIsRelegated()) {
+        if (containsJoinMatcher.find() || BooleanUtils.isTrue(PageHelperUtils.getIsRelegated())) {
             //多表分页逻辑没实现，用默认的SQL后面追加LIMIT子句的方式（对于不是JOIN方式来进行表连接的SQL（比如笛卡尔积），执行可能会报错。这个时候需要手动将降级选项置为true）
             log.info("使用了多表联查的SQL、或是手动将降级选项置为true的SQL，不会进行优化，而是转而使用默认的SQL后面追加LIMIT子句的方式");
             return invokeSuperMethod(sql, page, pageKey);
